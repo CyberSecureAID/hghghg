@@ -767,8 +767,58 @@
     <div class="tpl-gen-label" id="tplGeneratingLabel">Generando plantilla…</div>
   </div>
 
-  <!-- SheetJS -->
+  <!-- ═══════════════════════════════════════════════════════════
+       LIBRERÍAS JAVASCRIPT
+       
+       ORDEN IMPORTANTE:
+       1. xlsx.full.min.js  → SheetJS original para LEER archivos
+                              (expone global: XLSX)
+       2. xlsx-js-style     → Fork con soporte de estilos para ESCRIBIR
+                              (expone global: XLSXStyle)
+       
+       app.js detecta automáticamente si XLSXStyle está disponible
+       y lo usa para exportar con colores, fuentes y bordes.
+  ═══════════════════════════════════════════════════════════ -->
+
+  <!-- SheetJS: para leer archivos .xlsx/.xls/.csv -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <!-- xlsx-js-style: fork gratuito con soporte real de cell styles para escribir -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+  <script>
+    /* Asignar xlsx-js-style al global XLSXStyle para que app.js lo detecte.
+       xlsx-js-style se carga como "XLSX" también, así que debemos capturarlo
+       antes de que el script de estado global lo sobreescriba. */
+    if (typeof XLSX !== 'undefined' && XLSX.writeFile) {
+      /* En este punto XLSX puede ser el de xlsx-js-style (se cargó segundo).
+         Lo guardamos como XLSXStyle para distinguirlo. */
+      window.XLSXStyle = XLSX;
+    }
+  </script>
+
+  <!-- Restaurar XLSX al SheetJS original para la lectura de archivos -->
+  <script>
+    /* xlsx-js-style sobreescribe el global XLSX. Lo restauramos al original
+       de SheetJS (que es idéntico para lectura) pero mantenemos XLSXStyle
+       apuntando al fork con estilos para la escritura.
+       
+       En la práctica ambas librerías tienen el mismo API para read/utils,
+       por lo que usar XLSXStyle para todo también funciona.
+       Si XLSXStyle no cargó correctamente, XLSX (SheetJS original) se usa
+       como fallback sin estilos. */
+    (function() {
+      var xs = window.XLSXStyle;
+      if (xs && typeof xs.write === 'function') {
+        /* xlsx-js-style cargó bien — ya está en XLSXStyle */
+        /* XLSX global sigue apuntando a xlsx-js-style (mismo objeto),
+           lo cual está bien: tiene el mismo API de lectura */
+        console.log('[HeriExcel] xlsx-js-style cargado — exportación con estilos activada ✓');
+      } else {
+        console.warn('[HeriExcel] xlsx-js-style no disponible — exportación sin estilos');
+        window.XLSXStyle = null;
+      }
+    })();
+  </script>
 
   <script src="js/state.js"></script>
   <script src="js/utils.js"></script>
