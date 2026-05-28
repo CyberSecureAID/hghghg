@@ -1,0 +1,734 @@
+/* ═══════════════════════════════════════════
+   HeriExcel.Pro — templates.css  v4.1
+   FIX v4.1:
+   - Scroll vertical habilitado en .tpl-grid-scroll
+     y en .tpl-panel (se eliminó overflow:hidden que
+     bloqueaba el desplazamiento).
+   - .upload-section ya no corta el contenido
+     cuando el panel de plantillas está abierto.
+═══════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────
+   UPLOAD SECTION — contenedor principal
+────────────────────────────────────────── */
+.upload-section {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 0;
+  /* FIX: NO overflow:hidden — debe permitir scroll dentro del panel */
+  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ══════════════════════════════════════════
+   PANTALLA DE INICIO — 3 MODOS UNIFORMES
+══════════════════════════════════════════ */
+.upload-modes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 48px 32px;
+  max-width: 1000px;
+  margin: 0 auto;
+  align-self: center;
+  /* Permitir scroll propio si las tarjetas no caben */
+  overflow-y: auto;
+}
+
+/* ── Todos los wrappers de tarjeta al mismo tamaño ── */
+.upload-card-wrapper,
+.upload-mode-blank,
+.upload-mode-create,
+#btnBlankSheet,
+#btnCreateTemplate {
+  flex: 0 0 260px;
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
+  height: 320px;
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ── Wrapper tornasol — idéntico para las tres ── */
+.hx-mode-card-wrap {
+  padding: 2px;
+  border-radius: 20px;
+  background: linear-gradient(
+    135deg,
+    #7c8cf8, #c084fc, #f472b6,
+    #fb923c, #facc15, #4ade80,
+    #22d3ee, #7c8cf8, #c084fc, #f472b6
+  );
+  background-size: 300% 300%;
+  animation: borderIridescent 5s ease infinite;
+  box-shadow: 0 0 28px rgba(124, 140, 248, 0.15), var(--shadow-lg);
+  height: 100%;
+  display: block;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.18s ease;
+}
+
+.hx-mode-card-wrap:hover {
+  box-shadow: 0 0 48px rgba(124, 140, 248, 0.38), var(--shadow-lg);
+  transform: translateY(-3px);
+}
+
+/* ── Interior de cada tarjeta — estructura fija ── */
+.hx-mode-card-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 40px 28px 32px;
+  background: var(--bg-surface);
+  border-radius: 18px;
+  height: 100%;
+  box-sizing: border-box;
+  transition: background 0.2s ease;
+}
+
+.hx-mode-card-wrap:hover .hx-mode-card-inner {
+  background: var(--bg-hover);
+}
+
+/* ── Ícono de la tarjeta — mismo tamaño en las tres ── */
+.hx-mode-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.hx-mode-icon-snowflake {
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  color: var(--accent);
+}
+
+.hx-mode-icon-blank {
+  background: var(--success-dim);
+  border: 1px solid var(--success-border);
+  color: var(--success);
+}
+
+.hx-mode-icon-blank svg {
+  width: 28px;
+  height: 28px;
+}
+
+.hx-mode-icon-tpl {
+  background: rgba(192, 132, 252, 0.12);
+  border: 1px solid rgba(192, 132, 252, 0.35);
+  color: #c084fc;
+}
+
+.hx-mode-icon-tpl svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* ── Textos — idénticos en las tres tarjetas ── */
+.hx-mode-title {
+  font-family: var(--font-logo);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.hx-mode-sub {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  flex: 1;
+  margin: 0;
+}
+
+/* ── CTA pill — idéntico en las tres ── */
+.hx-mode-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 18px;
+  border-radius: 20px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--bg-panel);
+  color: var(--text-secondary);
+  pointer-events: none;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Drag-over del dropZone */
+.upload-card-wrapper.drag-over .hx-mode-card-wrap {
+  box-shadow: 0 0 52px rgba(124, 140, 248, 0.5), var(--shadow-lg);
+}
+.upload-card-wrapper.drag-over .hx-mode-card-inner {
+  background: var(--bg-hover);
+}
+
+/* Label file input dentro del wrapper */
+.upload-card-wrapper .hx-mode-card-inner label.btn {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* ── Divider "o" ── */
+.upload-mode-divider {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  user-select: none;
+  align-self: center;
+}
+
+/* ══════════════════════════════════════════
+   PANEL DE PLANTILLAS
+   FIX v4.1: se elimina overflow:hidden del panel
+   para que .tpl-grid-scroll pueda hacer scroll.
+══════════════════════════════════════════ */
+.tpl-panel {
+  display: none;
+  width: 100%;
+  height: 100%;
+  /* FIX: NO overflow:hidden — el scroll lo maneja .tpl-grid-scroll */
+}
+
+.tpl-panel.tpl-panel-open {
+  display: flex;
+  flex-direction: row;
+}
+
+/* ── Sidebar ── */
+.tpl-sidebar {
+  width: 210px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 20px 0;
+}
+
+.tpl-sidebar-logo {
+  padding: 0 16px 14px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+
+.tpl-sidebar-title {
+  font-family: var(--font-logo);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tpl-sidebar-subtitle {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  font-family: var(--font-ui);
+}
+
+.tpl-sidebar-section {
+  padding: 8px 16px 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: block;
+}
+
+.tpl-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: calc(100% - 24px);
+  margin: 0 12px 10px;
+  padding: 7px 10px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.tpl-back-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+.tpl-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  color: var(--text-secondary);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--transition);
+  white-space: nowrap;
+  position: relative;
+}
+.tpl-filter-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.tpl-filter-btn.tpl-filter-active {
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-weight: 600;
+}
+.tpl-filter-btn.tpl-filter-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  background: var(--accent);
+  border-radius: 0 2px 2px 0;
+}
+
+.tpl-filter-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tpl-filter-count {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--text-muted);
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0 5px;
+  line-height: 16px;
+  min-width: 20px;
+  text-align: center;
+}
+.tpl-filter-btn.tpl-filter-active .tpl-filter-count {
+  background: var(--accent-dim);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+/* ── Área de contenido ── */
+.tpl-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  /* FIX: min-width:0 para que flex no desborde; sin overflow:hidden */
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Header del contenido */
+.tpl-content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  gap: 12px;
+  background: var(--bg-surface);
+}
+
+.tpl-content-title-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tpl-content-title {
+  font-family: var(--font-logo);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.tpl-content-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+}
+
+.tpl-search-wrap {
+  display: flex;
+  align-items: center;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  height: 30px;
+  padding: 0 10px;
+  gap: 6px;
+  min-width: 200px;
+}
+.tpl-search-wrap svg { color: var(--text-muted); flex-shrink: 0; }
+.tpl-search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--text-primary);
+  width: 100%;
+  user-select: text;
+}
+.tpl-search-input::placeholder { color: var(--text-muted); }
+.tpl-search-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+/* ── Scroll del grid ──
+   FIX v4.1: overflow-y: auto es el corazón del fix.
+   Este div es el único que hace scroll; su padre
+   (.tpl-content) usa flex con min-height:0 para
+   que este div pueda contraerse correctamente.
+────────────────────────────────────────── */
+.tpl-grid-scroll {
+  flex: 1;
+  overflow-y: auto;   /* ← SCROLL VERTICAL HABILITADO */
+  overflow-x: hidden;
+  padding: 20px;
+  /* min-height:0 garantiza que flex-child pueda scroll */
+  min-height: 0;
+}
+
+/* ══════════════════════════════════════════
+   GRID DE PLANTILLAS — COMPLETAMENTE UNIFORME
+══════════════════════════════════════════ */
+.tpl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-auto-rows: 230px;
+  gap: 16px;
+  align-items: stretch;
+}
+
+/* ══════════════════════════════════════════
+   TARJETA DE PLANTILLA — ESTRUCTURA FIJA
+══════════════════════════════════════════ */
+.tpl-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Barra de color superior */
+.tpl-card::before {
+  content: '';
+  display: block;
+  height: 3px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.tpl-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  border-color: var(--border-light);
+}
+.tpl-card:hover::before { opacity: 1; }
+.tpl-card:active { transform: translateY(-1px); }
+
+/* Colores de barra por categoría */
+.tpl-card[data-cat="general"]::before   { background: #4ade80; }
+.tpl-card[data-cat="finanzas"]::before  { background: #7c8cf8; }
+.tpl-card[data-cat="almacen"]::before   { background: #fbbf24; }
+.tpl-card[data-cat="proyectos"]::before { background: #c084fc; }
+.tpl-card[data-cat="analisis"]::before  { background: #f87171; }
+.tpl-card[data-cat="rrhh"]::before      { background: #22d3ee; }
+.tpl-card[data-cat="marketing"]::before { background: #fb923c; }
+.tpl-card[data-cat="legal"]::before     { background: #a78bfa; }
+
+/* ── Preview visual — ALTURA FIJA 72px en todas ── */
+.tpl-card-preview {
+  width: 100%;
+  height: 72px;
+  flex-shrink: 0;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tpl-preview-row {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.tpl-preview-cell {
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.tpl-preview-cell.head {
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+}
+.tpl-preview-cell.data {
+  background: var(--bg-hover);
+}
+
+/* Ícono flotante en preview */
+.tpl-card-icon-overlay {
+  position: absolute;
+  bottom: 5px;
+  right: 7px;
+  font-size: 20px;
+  line-height: 1;
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+
+/* ── Cuerpo de texto — FLEX GROW ── */
+.tpl-card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px 8px;
+  flex: 1;
+  gap: 4px;
+  min-height: 0;
+}
+
+.tpl-card-name {
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.tpl-card-desc {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  color: var(--text-muted);
+  line-height: 1.45;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Footer — ALTURA FIJA 44px ── */
+.tpl-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 0 12px 10px;
+  flex-shrink: 0;
+  height: 44px;
+  box-sizing: border-box;
+}
+
+.tpl-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+.tpl-card-badge.cat-general   { background: var(--success-dim);           color: var(--success); border: 1px solid var(--success-border); }
+.tpl-card-badge.cat-finanzas  { background: var(--accent-dim);            color: var(--accent);  border: 1px solid var(--accent-border); }
+.tpl-card-badge.cat-almacen   { background: var(--formula-dim);           color: var(--formula); border: 1px solid rgba(251,191,36,0.35); }
+.tpl-card-badge.cat-proyectos { background: rgba(192,132,252,0.12);       color: #c084fc;        border: 1px solid rgba(192,132,252,0.35); }
+.tpl-card-badge.cat-analisis  { background: var(--danger-dim);            color: var(--danger);  border: 1px solid var(--danger-border); }
+.tpl-card-badge.cat-rrhh      { background: rgba(34,211,238,0.10);        color: #22d3ee;        border: 1px solid rgba(34,211,238,0.30); }
+.tpl-card-badge.cat-marketing { background: rgba(251,146,60,0.12);        color: #fb923c;        border: 1px solid rgba(251,146,60,0.35); }
+.tpl-card-badge.cat-legal     { background: rgba(167,139,250,0.12);       color: #a78bfa;        border: 1px solid rgba(167,139,250,0.35); }
+
+.tpl-card-sheets {
+  font-size: 9.5px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ── Estado vacío ── */
+.tpl-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  gap: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+.tpl-empty svg      { opacity: 0.4; }
+.tpl-empty-title    { font-size: 14px; font-weight: 600; color: var(--text-secondary); }
+.tpl-empty-sub      { font-size: 12px; }
+
+/* ── Overlay de generación ── */
+.tpl-generating {
+  position: fixed;
+  inset: 0;
+  z-index: 299999;
+  background: rgba(26, 27, 38, 0.88);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+.tpl-generating.hidden { display: none; }
+
+.tpl-gen-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--border);
+  border-top-color: var(--success);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.tpl-gen-label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+/* ──────────────────────────────────────────
+   SCROLLBARS
+────────────────────────────────────────── */
+.tpl-sidebar::-webkit-scrollbar,
+.tpl-grid-scroll::-webkit-scrollbar { width: 6px; }
+.tpl-sidebar::-webkit-scrollbar-thumb,
+.tpl-grid-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 3px;
+}
+.tpl-grid-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ──────────────────────────────────────────
+   RESPONSIVE
+────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .upload-modes {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 32px 20px;
+  }
+
+  .upload-card-wrapper,
+  #btnBlankSheet,
+  #btnCreateTemplate {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 320px;
+    min-width: 0;
+    height: 280px;
+  }
+
+  .upload-mode-divider { display: none; }
+
+  .tpl-panel.tpl-panel-open { flex-direction: column; }
+  .tpl-sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 10px 12px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    overflow-y: visible;
+    overflow-x: auto;
+  }
+  .tpl-sidebar-logo,
+  .tpl-sidebar-section { display: none; }
+  .tpl-back-btn { width: auto; margin: 0; }
+  .tpl-filter-btn { width: auto; padding: 4px 10px; border-radius: 20px; }
+  .tpl-filter-btn.tpl-filter-active::before { display: none; }
+  .tpl-filter-count { display: none; }
+  .tpl-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 230px;
+  }
+  .tpl-grid-scroll { padding: 14px; }
+}
+
+@media (max-width: 480px) {
+  .tpl-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 230px;
+  }
+}
